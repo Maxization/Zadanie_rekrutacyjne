@@ -10,17 +10,49 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_30_084849) do
+ActiveRecord::Schema.define(version: 2019_05_08_194157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "carts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "discounts", force: :cascade do |t|
+    t.string "name"
+    t.string "kind"
+    t.float "price"
+    t.bigint "cart_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cart_id"], name: "index_discounts_on_cart_id"
+    t.index ["name"], name: "index_discounts_on_name", unique: true
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.integer "quantity", default: 1
+    t.bigint "cart_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "product_id"
+    t.index ["cart_id"], name: "index_items_on_cart_id"
+    t.index ["product_id"], name: "index_items_on_product_id"
+  end
 
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.float "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "discount_id"
+    t.index ["discount_id"], name: "index_products_on_discount_id"
     t.index ["name"], name: "index_products_on_name", unique: true
   end
 
+  add_foreign_key "discounts", "carts"
+  add_foreign_key "items", "carts"
+  add_foreign_key "items", "products"
+  add_foreign_key "products", "discounts"
 end
