@@ -23,7 +23,8 @@ ActiveRecord::Schema.define(version: 2019_05_09_080400) do
   create_table "discounts", force: :cascade do |t|
     t.string "name"
     t.string "kind"
-    t.float "price"
+    t.float "price", default: 0.0
+    t.integer "count", default: 0
     t.bigint "cart_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

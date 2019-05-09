@@ -1,45 +1,41 @@
 module Carts
-class ItemsController < ApplicationController
-  before_action :create_cart
+  class ItemsController < ApplicationController
+    before_action :create_cart
 
-  def create
-    if params[:quantity] == '0'
-      cart.items.find_by(product_id: params[:product_id]).destroy
-    else
-      cart.items.create!(item_params)
+    def create
+      if params[:quantity] == '0'
+        cart.items.find_by(product_id: params[:product_id]).destroy
+      else
+        cart.items.create!(item_params)
+      end
+      render json: cart, status: 201
     end
-    render json: cart
-  end
 
-  def update
-    item.update!(item_update_params)
+    def update
+      item.update!(item_params)
 
-    render json: cart, status: 201
-  end
-
-  private
-
-  def create_cart
-    if Cart.all.empty?
-      Cart.create
+      render json: cart, status: 201
     end
-  end
 
-  def item_params
-    params.permit(:product_id,:quantity)
-  end
+    private
 
-  def item_update_params
-    params.permit(:quantity)
-  end
+    def create_cart
+      if Cart.all.empty?
+        Cart.create
+      end
+    end
 
-  def item
-    @item ||= Item.find_by!(id: params[:id])
-  end
+    def item_params
+      params.permit(:product_id,:quantity)
+    end
 
-  def cart
-    @cart ||= Cart.all.first
-  end
+    def item
+      @item ||= Item.find_by!(id: params[:id])
+    end
 
-end
+    def cart
+      @cart ||= Cart.all.first
+    end
+
+  end
 end
