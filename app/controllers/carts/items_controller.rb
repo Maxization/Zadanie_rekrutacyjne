@@ -1,5 +1,6 @@
 module Carts
 class ItemsController < ApplicationController
+  before_action :create_cart
 
   def create
     if params[:quantity] == '0'
@@ -18,6 +19,12 @@ class ItemsController < ApplicationController
 
   private
 
+  def create_cart
+    if Cart.all.empty?
+      Cart.create
+    end
+  end
+
   def item_params
     params.permit(:product_id,:quantity)
   end
@@ -31,7 +38,7 @@ class ItemsController < ApplicationController
   end
 
   def cart
-    @cart ||= Cart.find(1)
+    @cart ||= Cart.all.first
   end
 
 end

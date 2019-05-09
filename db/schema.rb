@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_08_194157) do
+ActiveRecord::Schema.define(version: 2019_05_09_080400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,18 +41,26 @@ ActiveRecord::Schema.define(version: 2019_05_08_194157) do
     t.index ["product_id"], name: "index_items_on_product_id"
   end
 
+  create_table "product_discounts", force: :cascade do |t|
+    t.bigint "product_id"
+    t.bigint "discount_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discount_id"], name: "index_product_discounts_on_discount_id"
+    t.index ["product_id"], name: "index_product_discounts_on_product_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.float "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "discount_id"
-    t.index ["discount_id"], name: "index_products_on_discount_id"
     t.index ["name"], name: "index_products_on_name", unique: true
   end
 
   add_foreign_key "discounts", "carts"
   add_foreign_key "items", "carts"
   add_foreign_key "items", "products"
-  add_foreign_key "products", "discounts"
+  add_foreign_key "product_discounts", "discounts"
+  add_foreign_key "product_discounts", "products"
 end

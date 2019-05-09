@@ -1,6 +1,7 @@
 module Carts
   class DiscountsController < ApplicationController
-
+    before_action :create_cart
+    
     def create
       cart.discounts.create!(discount_params)
 
@@ -9,16 +10,18 @@ module Carts
 
     private
 
+    def create_cart
+      if Cart.all.empty?
+        Cart.create
+      end
+    end
+
     def discount_params
       params.permit(:kind,:name,:product_ids,:price)
     end
 
     def cart
-      if Cart.present?
-        @cart ||= Cart.find(1)
-      else
-        @cart ||= Cart.create
-      end
+      @cart ||= Cart.all.first
     end
 
   end
